@@ -1,16 +1,19 @@
 all: index.html
 
-index.html: rand-1m.bin rand-2m.bin rand-4m.bin rand-8m.bin zero-4m.bin 320x240-white.png
-	tree -H '.' -L 1 --noreport --charset utf-8 > index.html
+dist/index.html: dist/rand-1m.bin dist/rand-2m.bin dist/rand-4m.bin dist/rand-8m.bin dist/zero-4m.bin dist/320x240-white.png
+	tree -H '.' -L 1 --noreport --charset utf-8 > $@
 
-rand-%.bin:
+dist/rand-%.bin: dist
 	head -c $* < /dev/urandom > $@
 
-zero-%.bin:
+dist/zero-%.bin: dist
 	head -c $* < /dev/zero > $@
 
-%-white.png:
+dist/%-white.png: dist
 	convert -size $* canvas:white $@
 
+dist:
+	mkdir dist
+
 clean:
-	rm -f *.bin *.png *.html
+	rm -rf dist
